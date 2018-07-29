@@ -5,6 +5,9 @@
  */
 package advdisc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Vector {
     final int dimension;        //  The usage of an immutable Integer variable to hold a value for Vector dimension.
     private double[] vector;    //  The usage of an Array/List-like structure to store the Vector data.
@@ -56,6 +59,10 @@ class Vector {
     public double[] getVector() {
         return vector;
     }
+    
+    public static Vector Gauss_Jordan(List<Vector> vectors, int dimension, Vector constants) {
+        return constants;
+    }
 }
 
 public class ADVDISC {
@@ -64,7 +71,14 @@ public class ADVDISC {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        List<Vector> matrix = new ArrayList<Vector>() {{
+           add(new Vector(new double[] {1, 2, 3, 4}, 4));
+           add(new Vector(new double[] {2, 3, 4, 5}, 4));
+           add(new Vector(new double[] {2, 7, 8, 9}, 4));
+           add(new Vector(new double[] {1, 3, 5, 7}, 4));
+        }};
+        
+        Vector.Gauss_Jordan(matrix, 4, new Vector(new double[] {1, 2, 3, 4}, 4));
     }
     
 }
