@@ -6,6 +6,7 @@
 package advdisc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class Vector {
@@ -79,6 +80,13 @@ class Vector {
         }
     }
     
+    public static List<Vector> Swap(List<Vector> vectors, int currentVector) {
+        if(currentVector + 1 != vectors.size())
+            Collections.swap(vectors, currentVector, currentVector+1);
+        
+        return vectors;
+    }
+    
     public static Vector Gauss_Jordan(List<Vector> vectors, int dimension, Vector constants) {
         int size;
         double currConstant;
@@ -87,6 +95,9 @@ class Vector {
         
         // 1/2 Gauss-Jordan (down)
         for(int i = 0; i < dimension; i++) {
+            if(vectors.get(i).getVector()[i] == 0)
+                Swap(vectors, i);
+            
             if(vectors.get(i).getVector()[i] != 0) {
                 // Make the main diagonal 1
                 constants.getVector()[i] /= vectors.get(i).getVector()[i];
@@ -101,8 +112,7 @@ class Vector {
                     size = vectors.get(i).getDimension();
                     currConstant += constants.getVector()[i];
                     currArray = new double[size];
-                    for(int k = 0; k < size; k++)
-                        currArray[k] = vectors.get(i).getVector()[k];
+                    System.arraycopy(vectors.get(i).getVector(), 0, currArray, 0, size);
 
                     curr = new Vector(currArray, currArray.length);
                     
@@ -128,8 +138,7 @@ class Vector {
                     size = vectors.get(i).getDimension();
                     currConstant += constants.getVector()[i];
                     currArray = new double[size];
-                    for(int k = 0; k < size; k++)
-                        currArray[k] = vectors.get(i).getVector()[k];
+                    System.arraycopy(vectors.get(i).getVector(), 0, currArray, 0, size);
 
                     curr = new Vector(currArray, currArray.length);
                     
@@ -173,7 +182,7 @@ public class ADVDISC {
      */
     public static void main(String[] args) {
         List<Vector> matrix = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 1, 0, 1}, 4));
+           add(new Vector(new double[] {0, 1, 0, 1}, 4));
            add(new Vector(new double[] {1, 0, 1, 1}, 4));
            add(new Vector(new double[] {0, 1, 1, 1}, 4));
            add(new Vector(new double[] {1, 1, 1, 0}, 4));
