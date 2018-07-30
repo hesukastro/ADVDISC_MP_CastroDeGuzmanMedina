@@ -64,20 +64,28 @@ class Vector {
         return vector;
     }
     
-    public static void PrintMatrix(List<Vector> vectors) {
+    public void PrintVector() {
+        for(int i = 0; i < dimension; i++)
+            System.out.print(vector[i] + " ");
+    }
+    
+    public static void PrintMatrix(List<Vector> vectors, Vector constants) {
         double[] curr;
+        double[] constant = constants.getVector();
         for(int i = 0; i < vectors.size(); i++) {
             curr = vectors.get(i).getVector();
             
             for(int j = 0; j < vectors.get(i).dimension; j++)
                 System.out.print(curr[j] + " ");
             
+            System.out.print(constant[i]);
             System.out.println("");
         }
     }
     
     public static Vector Gauss_Jordan(List<Vector> vectors, int dimension, Vector constants) {
         int size;
+        double currConstant;
         double[] currArray;
         Vector curr;
         
@@ -85,14 +93,17 @@ class Vector {
         for(int i = 0; i < dimension; i++) {
             if(vectors.get(i).getVector()[i] != 0) {
                 // Make the main diagonal 1
+                constants.getVector()[i] /= vectors.get(i).getVector()[i];
                 vectors.get(i).scale(1/vectors.get(i).getVector()[i]);
-                PrintMatrix(vectors);
+                PrintMatrix(vectors, constants);
                 System.out.println("");
 
                 // Make everything below the current 1, 0
                 for(int j = i + 1; j < dimension; j++) {
+                    currConstant = 0;
                     // Make a new copy of the current vector
                     size = vectors.get(i).getDimension();
+                    currConstant += constants.getVector()[i];
                     currArray = new double[size];
                     for(int k = 0; k < size; k++)
                         currArray[k] = vectors.get(i).getVector()[k];
@@ -101,10 +112,12 @@ class Vector {
                     
                     // Scale the current (copy) vector to the element of the next to make it 0
                     curr.scale(-vectors.get(j).getVector()[i]);
+                    currConstant *= (-vectors.get(j).getVector()[i]);
                     // Make it 0
                     vectors.get(j).add(curr);
+                    constants.getVector()[j] += currConstant;
 
-                    PrintMatrix(vectors);
+                    PrintMatrix(vectors, constants);
                     System.out.println("");
                 }
             }
@@ -114,8 +127,10 @@ class Vector {
             if(vectors.get(i).getVector()[i] != 0) {
                 // Make everything below the current 1, 0
                 for(int j = i - 1; j >= 0; j--) {
+                    currConstant = 0;
                     // Make a new copy of the current vector
                     size = vectors.get(i).getDimension();
+                    currConstant += constants.getVector()[i];
                     currArray = new double[size];
                     for(int k = 0; k < size; k++)
                         currArray[k] = vectors.get(i).getVector()[k];
@@ -124,10 +139,12 @@ class Vector {
                     
                     // Scale the current (copy) vector to the element of the next to make it 0
                     curr.scale(-vectors.get(j).getVector()[i]);
+                    currConstant *= (-vectors.get(j).getVector()[i]);
                     // Make it 0
                     vectors.get(j).add(curr);
+                    constants.getVector()[j] += currConstant;
 
-                    PrintMatrix(vectors);
+                    PrintMatrix(vectors, constants);
                     System.out.println("");
                 }
             }
@@ -144,12 +161,12 @@ public class ADVDISC {
      */
     public static void main(String[] args) {
         List<Vector> matrix = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 1, -1}, 3));
-           add(new Vector(new double[] {0, 1, 3}, 3));
-           add(new Vector(new double[] {-1, 0, 2}, 3));
+           add(new Vector(new double[] {1, 1, 1}, 3));
+           add(new Vector(new double[] {2, 3, 5}, 3));
+           add(new Vector(new double[] {4, 0, 5}, 3));
         }};
         
-        Vector.Gauss_Jordan(matrix, 3, new Vector(new double[] {9, 3, 2}, 3));
+        Vector.Gauss_Jordan(matrix, 3, new Vector(new double[] {5, 8, 2}, 3));
     }
     
 }
