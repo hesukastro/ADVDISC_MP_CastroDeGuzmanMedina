@@ -80,6 +80,8 @@ class Vector {
         int size;
         double[] currArray;
         Vector curr;
+        
+        // 1/2 Gauss-Jordan (down)
         for(int i = 0; i < dimension; i++) {
             if(vectors.get(i).getVector()[i] != 0) {
                 // Make the main diagonal 1
@@ -89,6 +91,29 @@ class Vector {
 
                 // Make everything below the current 1, 0
                 for(int j = i + 1; j < dimension; j++) {
+                    // Make a new copy of the current vector
+                    size = vectors.get(i).getDimension();
+                    currArray = new double[size];
+                    for(int k = 0; k < size; k++)
+                        currArray[k] = vectors.get(i).getVector()[k];
+
+                    curr = new Vector(currArray, currArray.length);
+                    
+                    // Scale the current (copy) vector to the element of the next to make it 0
+                    curr.scale(-vectors.get(j).getVector()[i]);
+                    // Make it 0
+                    vectors.get(j).add(curr);
+
+                    PrintMatrix(vectors);
+                    System.out.println("");
+                }
+            }
+        }
+        
+        for(int i = dimension-1; i >= 0; i--) {
+            if(vectors.get(i).getVector()[i] != 0) {
+                // Make everything below the current 1, 0
+                for(int j = i - 1; j >= 0; j--) {
                     // Make a new copy of the current vector
                     size = vectors.get(i).getDimension();
                     currArray = new double[size];
@@ -119,13 +144,12 @@ public class ADVDISC {
      */
     public static void main(String[] args) {
         List<Vector> matrix = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 2, 3, 4}, 4));
-           add(new Vector(new double[] {2, 3, 4, 5}, 4));
-           add(new Vector(new double[] {2, 7, 8, 9}, 4));
-           add(new Vector(new double[] {1, 3, 5, 7}, 4));
+           add(new Vector(new double[] {1, 1, -1}, 3));
+           add(new Vector(new double[] {0, 1, 3}, 3));
+           add(new Vector(new double[] {-1, 0, 2}, 3));
         }};
         
-        Vector.Gauss_Jordan(matrix, 4, new Vector(new double[] {1, 2, 3, 4}, 4));
+        Vector.Gauss_Jordan(matrix, 3, new Vector(new double[] {9, 3, 2}, 3));
     }
     
 }
