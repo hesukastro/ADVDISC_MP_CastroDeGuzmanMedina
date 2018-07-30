@@ -166,6 +166,27 @@ class Vector {
                 }
             }
         }
+        
+        //check for no solutions
+        if(constants != null) {
+            for(int i = 0; i < dimension; i++){
+                boolean zero = true;
+                //current row
+                double[] currVector = vectors.get(i).getVector();
+                for(int j = 0; j < currVector.length; j++){
+                    if(currVector[j] != 0)
+                        zero = false;
+                }
+                if(zero == true){
+                    if(constants.getVector()[i] != 0)
+                    {
+                        System.out.println();
+                        System.out.println("No solution");
+                        return null;
+                    }
+                }
+            }
+        }
 
         return constants;
     }
@@ -195,14 +216,13 @@ public class ADVDISC {
      */
     public static void main(String[] args) {
         List<Vector> vectors = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 2, 3, 4}, 4));
-           add(new Vector(new double[] {2, 3, 4, 5}, 4));
-           add(new Vector(new double[] {1, 3, 5, 7}, 4));
-           add(new Vector(new double[] {2, 7, 8, 9}, 4));
+           add(new Vector(new double[] {0, 4, 1}, 3));
+           add(new Vector(new double[] {2, 6, -2}, 3));
+           add(new Vector(new double[] {4, 8, -5}, 3));
         }};
         
-        //Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {1, 1, 1, 0}, 4));
-        System.out.println("span(matrix, 4) = " + Vector.span(vectors, vectors.size()));
+        Vector.Gauss_Jordan(vectors, 3, new Vector(new double[] {2, 3, 4}, 3));
+        //System.out.println("span(matrix, 4) = " + Vector.span(vectors, vectors.size()));
     }
     
 }
