@@ -86,8 +86,15 @@ class Vector {
     }
     
     public static List<Vector> Swap(List<Vector> vectors, int currentVector) {
-        if(currentVector + 1 != vectors.size())
-            Collections.swap(vectors, currentVector, currentVector+1);
+        for(int i = currentVector + 1; i < vectors.size(); i++) {
+            if(vectors.get(i).getVector()[currentVector] != 0) {
+                Collections.swap(vectors, currentVector, i);
+                break;
+            }
+        }
+        
+        if(vectors.get(currentVector).getVector()[currentVector] == 0)
+            return null;
         
         return vectors;
     }
@@ -101,7 +108,11 @@ class Vector {
         // 1/2 Gauss-Jordan (down)
         for(int i = 0; i < dimension; i++) {
             if(vectors.get(i).getVector()[i] == 0)
-                Swap(vectors, i);
+                if(Swap(vectors, i) == null) {
+                    System.out.println();
+                    System.out.println("No solution");
+                    return null;
+                }
             
             if(vectors.get(i).getVector()[i] != 0) {
                 // Do the operations on the constant as well if constant vector isn't null
@@ -216,13 +227,14 @@ public class ADVDISC {
      */
     public static void main(String[] args) {
         List<Vector> vectors = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {0, 4, 1}, 3));
-           add(new Vector(new double[] {2, 6, -2}, 3));
-           add(new Vector(new double[] {4, 8, -5}, 3));
+           add(new Vector(new double[] {1, 2, 3, 4}, 4));
+           add(new Vector(new double[] {2, 3, 4, 5}, 4));
+           add(new Vector(new double[] {2, 7, 8, 9}, 4));
+           add(new Vector(new double[] {1, 3, 5, 7}, 4));
         }};
         
-        Vector.Gauss_Jordan(vectors, 3, new Vector(new double[] {2, 3, 4}, 3));
-        //System.out.println("span(matrix, 4) = " + Vector.span(vectors, vectors.size()));
+        //Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {1, 1, 1, 0}, 4));
+        System.out.println("span(matrix, 4) = " + Vector.span(vectors, vectors.size()));
     }
     
 }
