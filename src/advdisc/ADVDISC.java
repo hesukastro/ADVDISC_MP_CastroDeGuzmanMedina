@@ -29,7 +29,7 @@ class Vector {
     //  A proper implementation of a function for vector scaling.
     //  Function header to be used: Vector scale (double scalar)
     //  Usage example: Assuming a Vector v and int b exists, v.scale(b) should scale the elements of v by b and return the scaled vector v. The elements inside v must be changed and be correctly scaled by b.     
-    public Vector scale(int scalar) {
+    public Vector scale(double scalar) {
         for(int i = 0; i < vector.length; i++)
             vector[i] = vector[i] * scalar;
         
@@ -56,11 +56,58 @@ class Vector {
         return dimension;
     }
     
+    public void setVector(double[] vector) {
+        this.vector = vector;
+    }
+    
     public double[] getVector() {
         return vector;
     }
     
+    public static void PrintMatrix(List<Vector> vectors) {
+        double[] curr;
+        for(int i = 0; i < vectors.size(); i++) {
+            curr = vectors.get(i).getVector();
+            
+            for(int j = 0; j < vectors.get(i).dimension; j++)
+                System.out.print(curr[j] + " ");
+            
+            System.out.println("");
+        }
+    }
+    
     public static Vector Gauss_Jordan(List<Vector> vectors, int dimension, Vector constants) {
+        int size;
+        double[] currArray;
+        Vector curr;
+        for(int i = 0; i < dimension; i++) {
+            if(vectors.get(i).getVector()[i] != 0) {
+                // Make the main diagonal 1
+                vectors.get(i).scale(1/vectors.get(i).getVector()[i]);
+                PrintMatrix(vectors);
+                System.out.println("");
+
+                // Make everything below the current 1, 0
+                for(int j = i + 1; j < dimension; j++) {
+                    // Make a new copy of the current vector
+                    size = vectors.get(i).getDimension();
+                    currArray = new double[size];
+                    for(int k = 0; k < size; k++)
+                        currArray[k] = vectors.get(i).getVector()[k];
+
+                    curr = new Vector(currArray, currArray.length);
+                    
+                    // Scale the current (copy) vector to the element of the next to make it 0
+                    curr.scale(-vectors.get(j).getVector()[i]);
+                    // Make it 0
+                    vectors.get(j).add(curr);
+
+                    PrintMatrix(vectors);
+                    System.out.println("");
+                }
+            }
+        }
+
         return constants;
     }
 }
