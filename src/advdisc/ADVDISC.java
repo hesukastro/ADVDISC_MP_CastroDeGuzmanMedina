@@ -56,10 +56,6 @@ class Vector {
         return dimension;
     }
     
-    public void setVector(double[] vector) {
-        this.vector = vector;
-    }
-    
     public double[] getVector() {
         return vector;
     }
@@ -177,12 +173,13 @@ public class ADVDISC {
      */
     public static void main(String[] args) {
         List<Vector> matrix = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 1, 1}, 3));
-           add(new Vector(new double[] {2, 3, 5}, 3));
-           add(new Vector(new double[] {4, 0, 5}, 3));
+           add(new Vector(new double[] {1, 1, 0, 1}, 4));
+           add(new Vector(new double[] {1, 0, 1, 1}, 4));
+           add(new Vector(new double[] {0, 1, 1, 1}, 4));
+           add(new Vector(new double[] {1, 1, 1, 0}, 4));
         }};
         
-        Vector.Gauss_Jordan(matrix, 3, new Vector(new double[] {5, 8, 2}, 3));
+        Vector.Gauss_Jordan(matrix, 4, new Vector(new double[] {5, 8, 2, 1}, 4));
         System.out.println("span(matrix, 3) = " + Vector.span(matrix, 3));
     }
     
