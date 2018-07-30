@@ -13,6 +13,9 @@ The following must be found in the code: (For function definitions, only functio
     1. Constructor definition to be used: Vector (double[ ] array, int dimension)
   3. The usage of an Array/List-like structure to store the Vector data.
   4. The usage of an immutable Integer variable to hold a value for Vector dimension.
+  
+  DONE
+  
 2. An implementation of functions for vector scaling and vector addition. (10 points)
   1.A proper implementation of a function for vector scaling.
     1. Function header to be used: Vector scale (int scalar)
@@ -20,12 +23,22 @@ The following must be found in the code: (For function definitions, only functio
   2. A proper implementation of a function for vector addition. Errors for size mismatches when adding vectors must also be handled.
     1. Function header to be used: Vector add (Vector addend)
     2. Usage example: Assuming both Vector v and w exist, v.add(w) should return the vector sum between v and w. The elements inside v must be changed and be a correct result of the operation of Vector addition between v and w.
+    
+    DONE 
+    
 3. An implementation of a function that performs Gauss-Jordan Elimination on a given set of vectors. (30 points)
   1. The function must be static-like in nature, and must be callable from the Vector class. See usage example for more details.
   2. Function header to be used: Vector Gauss_Jordan (List<Vector> vectors, int dimension, Vector constants)
   3. The function must be a proper implementation of Gauss-Jordan Elimination, which reduces the given list of vectors into unit vectors via row operations.
+ 
+ SCALE AND ADD -  DONE
+ 
   4. Usage example: Given a list of vectors vecList, an integer dim, and a Vector c, Vector.Gauss_Jordan (vecList, dim, c) should return a Vector containing the solution to the corresponding system of linear equations. Ex. [x y z w] = [2 1 3 5]
+  
+  DONE
+  
   5. If an unsolvable configuration is given (e.g. an input with only [2 1] in vectors and [2 3] in constants), the function must return a null pointer instead of the solution Vector to denote no solution.
+ 
 4. An implementation of a function that calculates the span of a list of vectors. (5 points)
   1. The function must be static-like in nature, and must be callable from the Vector class. See usage example for more details.
   2. Function header to be used: int span (List<Vector> vectors, int dimension)
