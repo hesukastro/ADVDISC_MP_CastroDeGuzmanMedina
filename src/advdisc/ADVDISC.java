@@ -152,6 +152,22 @@ class Vector {
 
         return constants;
     }
+    
+    public static int span(List<Vector> vectors, int dimension) {
+        int span = vectors.size();
+        System.out.println("span = " + span);
+        
+        for(int i = 0; i < vectors.size(); i++) {
+            for(int j = 0; j < vectors.get(i).getVector().length; j++) {
+                if(vectors.get(i).getVector()[j] != 0)
+                    break;
+                
+                span--;
+            }
+        }
+        
+        return span;
+    }
 }
 
 public class ADVDISC {
@@ -167,6 +183,7 @@ public class ADVDISC {
         }};
         
         Vector.Gauss_Jordan(matrix, 3, new Vector(new double[] {5, 8, 2}, 3));
+        System.out.println("span(matrix, 3) = " + Vector.span(matrix, 3));
     }
     
 }
