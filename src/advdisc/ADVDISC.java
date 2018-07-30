@@ -68,14 +68,19 @@ class Vector {
     
     public static void PrintMatrix(List<Vector> vectors, Vector constants) {
         double[] curr;
-        double[] constant = constants.getVector();
+        double[] constant = new double[vectors.size()];
+                
+        if(constants != null)
+            constant = constants.getVector();
         for(int i = 0; i < vectors.size(); i++) {
             curr = vectors.get(i).getVector();
             
             for(int j = 0; j < vectors.get(i).dimension; j++)
                 System.out.print(curr[j] + " ");
             
-            System.out.print(constant[i]);
+            if(constants != null)
+                System.out.print(constant[i]);
+            
             System.out.println("");
         }
     }
@@ -99,8 +104,10 @@ class Vector {
                 Swap(vectors, i);
             
             if(vectors.get(i).getVector()[i] != 0) {
+                // Do the operations on the constant as well if constant vector isn't null
+                if(constants != null)
+                    constants.getVector()[i] /= vectors.get(i).getVector()[i];
                 // Make the main diagonal 1
-                constants.getVector()[i] /= vectors.get(i).getVector()[i];
                 vectors.get(i).scale(1/vectors.get(i).getVector()[i]);
                 PrintMatrix(vectors, constants);
                 System.out.println("");
@@ -110,7 +117,8 @@ class Vector {
                     currConstant = 0;
                     // Make a new copy of the current vector
                     size = vectors.get(i).getDimension();
-                    currConstant += constants.getVector()[i];
+                    if(constants != null)
+                        currConstant += constants.getVector()[i];
                     currArray = new double[size];
                     System.arraycopy(vectors.get(i).getVector(), 0, currArray, 0, size);
 
@@ -121,7 +129,9 @@ class Vector {
                     currConstant *= (-vectors.get(j).getVector()[i]);
                     // Make it 0
                     vectors.get(j).add(curr);
-                    constants.getVector()[j] += currConstant;
+                    // Do the operations on the constant as well if constant vector isn't null
+                    if(constants != null)
+                        constants.getVector()[j] += currConstant;
 
                     PrintMatrix(vectors, constants);
                     System.out.println("");
@@ -136,7 +146,8 @@ class Vector {
                     currConstant = 0;
                     // Make a new copy of the current vector
                     size = vectors.get(i).getDimension();
-                    currConstant += constants.getVector()[i];
+                    if(constants != null)
+                        currConstant += constants.getVector()[i];
                     currArray = new double[size];
                     System.arraycopy(vectors.get(i).getVector(), 0, currArray, 0, size);
 
@@ -147,7 +158,8 @@ class Vector {
                     currConstant *= (-vectors.get(j).getVector()[i]);
                     // Make it 0
                     vectors.get(j).add(curr);
-                    constants.getVector()[j] += currConstant;
+                    if(constants != null)
+                        constants.getVector()[j] += currConstant;
 
                     PrintMatrix(vectors, constants);
                     System.out.println("");
@@ -159,15 +171,16 @@ class Vector {
     }
     
     public static int span(List<Vector> vectors, int dimension) {
-        int span = vectors.size();
-        System.out.println("span = " + span);
+        int span = 0;
+        
+        Gauss_Jordan(vectors, dimension, null);
         
         for(int i = 0; i < vectors.size(); i++) {
-            for(int j = 0; j < vectors.get(i).getVector().length; j++) {
-                if(vectors.get(i).getVector()[j] != 0)
+            for(int j = 0; j < vectors.get(i).getDimension(); j++) {
+                if (vectors.get(i).getVector()[j] != 0) {
+                    span++;
                     break;
-                
-                span--;
+                }
             }
         }
         
@@ -181,15 +194,15 @@ public class ADVDISC {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        List<Vector> matrix = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {0, 1, 0, 1}, 4));
-           add(new Vector(new double[] {1, 0, 1, 1}, 4));
-           add(new Vector(new double[] {0, 1, 1, 1}, 4));
-           add(new Vector(new double[] {1, 1, 1, 0}, 4));
+        List<Vector> vectors = new ArrayList<Vector>() {{
+           add(new Vector(new double[] {1, 2, 3, 4}, 4));
+           add(new Vector(new double[] {2, 3, 4, 5}, 4));
+           add(new Vector(new double[] {1, 3, 5, 7}, 4));
+           add(new Vector(new double[] {2, 7, 8, 9}, 4));
         }};
         
-        Vector.Gauss_Jordan(matrix, 4, new Vector(new double[] {5, 8, 2, 1}, 4));
-        System.out.println("span(matrix, 3) = " + Vector.span(matrix, 3));
+        //Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {1, 1, 1, 0}, 4));
+        System.out.println("span(matrix, 4) = " + Vector.span(vectors, vectors.size()));
     }
     
 }
