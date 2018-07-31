@@ -119,7 +119,7 @@ class Vector {
         vectors.removeAll(vectors);
         
         double[] currArray;
-        for (int i = 0; i < dimension; i++) {
+        for (int i = 0; i < vectors.size(); i++) {
             currArray = new double[tempMatrix.size()];
             
             for (int j = 0; j < tempMatrix.size(); j++) {
@@ -278,9 +278,8 @@ public class ADVDISC {
      */
     public static void main(String[] args) {
         List<Vector> vectors = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {2, 5, 1}, 3));
-           add(new Vector(new double[] {3, 3, 0}, 3));
-           add(new Vector(new double[] {5, 2, -1}, 3));
+           add(new Vector(new double[] {1, 0, 0}, 3));
+           add(new Vector(new double[] {0, 1, 0}, 3));
         }};
         
         double x = 10.5;
