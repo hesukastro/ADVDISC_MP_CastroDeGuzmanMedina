@@ -99,12 +99,40 @@ class Vector {
         return vectors;
     }
     
+    public static List<Vector> Transpose(List<Vector> vectors,int dimension){
+        double[][] temp = new double[dimension][dimension];
+        
+       for(int i = 0; i < dimension; i++){
+      	    for(int j = 0; j < dimension; j++){
+                System.out.print(vectors.get(i).getVector()[j]+" ");
+                temp[j][i] = vectors.get(i).getVector()[j];
+            }
+            System.out.println();
+        }
+
+       System.out.println("\nTRANSPOSING...");
+       
+       //goal matrix orientation
+       for(int i = 0; i < dimension; i++){
+      	    for(int j = 0; j < dimension; j++){
+                vectors.get(i).getVector()[j] = temp[i][j];
+                System.out.print(vectors.get(i).getVector()[j]+" ");
+            }
+            System.out.println();
+        }
+        
+       System.out.println();
+       
+        return vectors;
+    }
+    
     public static Vector Gauss_Jordan(List<Vector> vectors, int dimension, Vector constants) {
         int size;
         double currConstant;
         double[] currArray;
         Vector curr;
         
+        Transpose(vectors,dimension);
         // 1/2 Gauss-Jordan (down)
         for(int i = 0; i < dimension; i++) {
             if(vectors.get(i).getVector()[i] == 0)
