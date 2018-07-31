@@ -9,7 +9,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class Vector {
+/*
+    Castro, Joesei Jesus
+    De Guzman, Jersey Adelei
+    Medina, Chelsey Ann
+*/
+
+public class Vector {
     final int dimension;        //  The usage of an immutable Integer variable to hold a value for Vector dimension.
     private double[] vector;    //  The usage of an Array/List-like structure to store the Vector data.
     
@@ -342,23 +348,23 @@ class Vector {
     }
 }
 
-public class ADVDISC {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {        
-        List<Vector> vectors = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 0, 0, 0}, 4));
-           add(new Vector(new double[] {0, 0, 0, 0}, 4));
-           add(new Vector(new double[] {0, 1, 0, 0}, 4));
-           add(new Vector(new double[] {0, 0, 0, 1}, 4));
-        }};
-        
-        Vector constant = Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {2, 0, 0, 2}, 4));
-        if (constant != null)
-            constant.PrintVector();
-//        System.out.println("span = " + Vector.span(vectors, 3));
-    }
-    
-}
+//public class ADVDISC {
+//
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String[] args) {        
+//        List<Vector> vectors = new ArrayList<Vector>() {{
+//           add(new Vector(new double[] {1, 0, 0, 0}, 4));
+//           add(new Vector(new double[] {0, 0, 0, 0}, 4));
+//           add(new Vector(new double[] {0, 1, 0, 0}, 4));
+//           add(new Vector(new double[] {0, 0, 0, 1}, 4));
+//        }};
+//        
+//        Vector constant = Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {2, 0, 0, 2}, 4));
+//        if (constant != null)
+//            constant.PrintVector();
+////        System.out.println("span = " + Vector.span(vectors, 3));
+//    }
+//    
+//}
