@@ -70,6 +70,14 @@ class Vector {
             System.out.print(vector[i] + " ");
     }
     
+    public static void moveToEnd(double[] vector, int index) {
+        for(int i = index; i < vector.length && i + 1 < vector.length; i++) {
+            vector[i] = vector[i + 1];
+        }
+        
+        vector[vector.length-1] = 0;
+    }
+    
     public static void PrintMatrix(List<Vector> vectors, Vector constants) {
         double[] curr;
         double[] constant = new double[vectors.size()];
@@ -79,8 +87,12 @@ class Vector {
         for(int i = 0; i < vectors.size(); i++) {
             curr = vectors.get(i).getVector();
             
-            for(int j = 0; j < vectors.get(i).dimension; j++)
-                System.out.print(curr[j] + " ");
+            for(int j = 0; j < vectors.get(i).dimension; j++) {
+                if(curr[j] == -0)
+                    System.out.print("0.0 ");
+                else
+                    System.out.print(curr[j] + " ");
+            }
             
             if(constants != null)
                 System.out.print(constant[i]);
@@ -99,10 +111,15 @@ class Vector {
         return currArray;
     }
     
-    public static List<Vector> Swap(List<Vector> vectors, int currentVector) {
+    public static List<Vector> Swap(List<Vector> vectors, int currentVector, Vector constants) {
+        double tempSwitch;
+        
         for(int i = currentVector + 1; i < vectors.size(); i++) {
             if(vectors.get(i).getVector()[currentVector] != 0) {
                 Collections.swap(vectors, currentVector, i);
+                tempSwitch = constants.getVector()[currentVector];
+                constants.getVector()[currentVector] = constants.getVector()[i];
+                constants.getVector()[i] = tempSwitch;
                 break;
             }
         }
@@ -113,52 +130,133 @@ class Vector {
         return vectors;
     }
     
-    public static List<Vector> TransposeCheck(ArrayList<Vector> vectors, int dimension) {
+    public static boolean TransposeCheck(ArrayList<Vector> vectors, int dimension) {
         ArrayList<Vector> tempMatrix = (ArrayList) vectors.clone();
         
         vectors.removeAll(vectors);
         
         double[] currArray;
-        for (int i = 0; i < vectors.size(); i++) {
+        for (int i = 0; i < dimension; i++) {
             currArray = new double[tempMatrix.size()];
             
             for (int j = 0; j < tempMatrix.size(); j++) {
                 currArray[j] = tempMatrix.get(j).getVector()[i];
             }
             
-            vectors.add(new Vector(currArray, dimension));
+            vectors.add(new Vector(currArray, currArray.length));
         }
         
-        return vectors;
+        if(vectors.size() < vectors.get(0).getDimension() || vectors.size() <= 1)
+            return false;
+        else
+            return true;
+    }
+    
+    public static Vector finalCheck(List<Vector> vectors, Vector constants, int dimension) {
+        boolean zero = true;
+        int constantCounter = 0;
+        Vector curr = null;
+        
+        // Check for no solutions by iumn
+        if(constants != null) {
+            for(int i = 0; i < dimension; i++) {
+                zero = true;
+                // Get the row we want to check so it's easier to iterate
+                curr = vectors.get(i);
+                double[] currVector = vectors.get(i).getVector();
+                
+                // If we find a non-zero value, we say false
+                for(int j = 0; j < currVector.length; j++) {
+                    if(currVector[j] != 0)
+                        zero = false;
+                }
+                
+                // If all values is 0, check if the constant is also 0
+                if(zero == true){
+                    if(constants.getVector()[i] != 0) {
+                        System.out.println();
+                        System.out.println("No solution!");
+                        return null;
+                    }
+                    else {
+                        moveToEnd(constants.getVector(), i);
+                        vectors.remove(curr);
+                        vectors.add(curr);
+                        i--;
+                        dimension--;
+                    }
+                }
+            }
+            
+            for(int i = 0; i < vectors.get(0).getDimension(); i ++ ){
+                zero = true;
+                
+                for(int j = 0; j < vectors.size(); j++) {
+                    if(vectors.get(j).getVector()[i] != 0)
+                        zero = false;
+                }
+                
+                if(zero == false)
+                    constantCounter++;
+            }
+            
+            double[] newConstants = new double[constantCounter];
+            System.arraycopy(constants.getVector(), 0, newConstants, 0, constantCounter);
+            
+            PrintMatrix(vectors, constants);
+            
+            return new Vector(newConstants, newConstants.length);
+        }
+        
+        return constants;
     }
     
     public static Vector Gauss_Jordan(List<Vector> vectors, int dimension, Vector constants) {
         int size;
         double currConstant;
+        double div;
+        double valueCheck;
         double[] currArray;
         Vector curr;
         
-        TransposeCheck((ArrayList)vectors, dimension);
-        
+        // Transpose the vectors
+        if(!TransposeCheck((ArrayList)vectors, dimension)) {
+            System.out.println();
+            System.out.println("No solution!");
+            return null;
+        }
+            
         System.out.println("after transpose");
         PrintMatrix(vectors, constants);
         System.out.println("");
         
         // 1/2 Gauss-Jordan (down)
         for(int i = 0; i < dimension; i++) {
-            if(vectors.get(i).getVector()[i] == 0)
-                if(Swap(vectors, i) == null) {
-                    System.out.println();
-                    System.out.println("No solution!");
-                    return null;
+            try {
+            div = vectors.get(i).getVector()[i];
+            } catch(Exception e) {
+                break;
+            }
+            
+            // If the value is 0, try to swap it woth a row that has a non-zero value in the same iumn if one doesn't exist, move to the next iumn
+            if(div == 0)
+                if(Swap(vectors, i, constants) == null) {
+                    i++;
                 }
             
+            try {
+                valueCheck = vectors.get(i).getVector()[i];
+            } catch (Exception e) {
+                break;
+            }
+
+            // If the value isn't 0, do the rest of the operations
             if(vectors.get(i).getVector()[i] != 0) {
                 // Do the operations on the constant as well if constant vector isn't null
                 if(constants != null)
                     constants.getVector()[i] /= vectors.get(i).getVector()[i];
-                // Make the main diagonal 1
-                vectors.get(i).setVector(Divide(vectors.get(i), i));
+                // Make the main diagonal/current 1
+                vectors.get(i).setVector(Divide(vectors.get(i), i)); //Had to make another function to divide the whole row by a member of itself because Scale(1/value) returns a different value
                 PrintMatrix(vectors, constants);
                 System.out.println("");
 
@@ -174,10 +272,10 @@ class Vector {
 
                     curr = new Vector(currArray, currArray.length);
                     
-                    // Scale the current (copy) vector to the element of the next to make it 0
+                    // Scale the current (copy) vector to the negative of the element we want to make 0
                     curr.scale(-vectors.get(j).getVector()[i]);
                     currConstant *= (-vectors.get(j).getVector()[i]);
-                    // Make it 0
+                    // Make it 0 by adding the scaled vector
                     vectors.get(j).add(curr);
                     // Do the operations on the constant as well if constant vector isn't null
                     if(constants != null)
@@ -188,10 +286,16 @@ class Vector {
                 }
             }
         }
-        
+
+        // Remove the values on top of the main diagonal
         for(int i = dimension-1; i >= 0; i--) {
-            if(vectors.get(i).getVector()[i] != 0) {
-                // Make everything below the current 1, 0
+            try {
+            div = vectors.get(i).getVector()[i];
+            } catch(Exception e) {
+                break;
+            }
+            if(div != 0) {
+                // Make everything above the current 1, 0
                 for(int j = i - 1; j >= 0; j--) {
                     currConstant = 0;
                     // Make a new copy of the current vector
@@ -203,10 +307,10 @@ class Vector {
 
                     curr = new Vector(currArray, currArray.length);
                     
-                    // Scale the current (copy) vector to the element of the next to make it 0
+                    // Scale the current (copy) vector to the negative of the element we want to make 0
                     curr.scale(-vectors.get(j).getVector()[i]);
                     currConstant *= (-vectors.get(j).getVector()[i]);
-                    // Make it 0
+                    // Make it 0 by adding the scaled vector
                     vectors.get(j).add(curr);
                     if(constants != null)
                         constants.getVector()[j] += currConstant;
@@ -217,42 +321,13 @@ class Vector {
             }
         }
         
-        //check for no solutions
-        if(constants != null) {
-            for(int i = 0; i < dimension; i++){
-                boolean zero = true;
-                //current row
-                double[] currVector = vectors.get(i).getVector();
-                for(int j = 0; j < currVector.length; j++){
-                    if(currVector[j] != 0)
-                        zero = false;
-                }
-                if(zero == true){
-                    if(constants.getVector()[i] != 0)
-                    {
-                        System.out.println();
-                        System.out.println("No solution!");
-                        return null;
-                    }
-                }
-            }
-        }
-
-        return constants;
+        return finalCheck(vectors, constants, dimension);
     }
     
     public static int span(List<Vector> vectors, int dimension) {
         int span = 0;
         
-        System.out.println("before gj");
-        PrintMatrix(vectors, null);
-        System.out.println("");
-        
         Gauss_Jordan(vectors, dimension, null);
-        
-        System.out.println("before span check");
-        PrintMatrix(vectors, null);
-        System.out.println("");
         
         for(int i = 0; i < vectors.size(); i++) {
             for(int j = 0; j < vectors.get(i).getDimension(); j++) {
@@ -263,10 +338,6 @@ class Vector {
             }
         }
         
-        System.out.println("after span check");
-        PrintMatrix(vectors, null);
-        System.out.println("");
-        
         return span;
     }
 }
@@ -276,19 +347,18 @@ public class ADVDISC {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) {        
         List<Vector> vectors = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 0, 0}, 3));
-           add(new Vector(new double[] {0, 1, 0}, 3));
+           add(new Vector(new double[] {1, 0, 0, 0}, 4));
+           add(new Vector(new double[] {0, 0, 0, 0}, 4));
+           add(new Vector(new double[] {0, 1, 0, 0}, 4));
+           add(new Vector(new double[] {0, 0, 0, 1}, 4));
         }};
         
-        double x = 10.5;
-        double y = 4.5;
-        
-        System.out.println((1/4.5)*10);
-        
-        //Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {1, 1, 1, 0}, 4));
-        System.out.println("span = " + Vector.span(vectors, vectors.size()));
+        Vector constant = Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {2, 0, 0, 2}, 4));
+        if (constant != null)
+            constant.PrintVector();
+//        System.out.println("span = " + Vector.span(vectors, 3));
     }
     
 }
