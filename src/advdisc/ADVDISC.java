@@ -57,6 +57,10 @@ class Vector {
         return dimension;
     }
     
+    public void setVector(double[] vector) {
+        this.vector = vector;
+    }
+    
     public double[] getVector() {
         return vector;
     }
@@ -85,6 +89,16 @@ class Vector {
         }
     }
     
+    public static double[] Divide(Vector vector, int dividendIndex) {
+        double[] currArray = vector.getVector();
+        double dividend = vector.getVector()[dividendIndex];
+        
+        for(int i = 0; i < currArray.length; i++)
+            currArray[i] /= dividend;
+        
+        return currArray;
+    }
+    
     public static List<Vector> Swap(List<Vector> vectors, int currentVector) {
         for(int i = currentVector + 1; i < vectors.size(); i++) {
             if(vectors.get(i).getVector()[currentVector] != 0) {
@@ -99,18 +113,43 @@ class Vector {
         return vectors;
     }
     
+    public static List<Vector> TransposeCheck(ArrayList<Vector> vectors, int dimension) {
+        ArrayList<Vector> tempMatrix = (ArrayList) vectors.clone();
+        
+        vectors.removeAll(vectors);
+        
+        double[] currArray;
+        for (int i = 0; i < dimension; i++) {
+            currArray = new double[tempMatrix.size()];
+            
+            for (int j = 0; j < tempMatrix.size(); j++) {
+                currArray[j] = tempMatrix.get(j).getVector()[i];
+            }
+            
+            vectors.add(new Vector(currArray, dimension));
+        }
+        
+        return vectors;
+    }
+    
     public static Vector Gauss_Jordan(List<Vector> vectors, int dimension, Vector constants) {
         int size;
         double currConstant;
         double[] currArray;
         Vector curr;
         
+        TransposeCheck((ArrayList)vectors, dimension);
+        
+        System.out.println("after transpose");
+        PrintMatrix(vectors, constants);
+        System.out.println("");
+        
         // 1/2 Gauss-Jordan (down)
         for(int i = 0; i < dimension; i++) {
             if(vectors.get(i).getVector()[i] == 0)
                 if(Swap(vectors, i) == null) {
                     System.out.println();
-                    System.out.println("No solution");
+                    System.out.println("No solution!");
                     return null;
                 }
             
@@ -119,7 +158,7 @@ class Vector {
                 if(constants != null)
                     constants.getVector()[i] /= vectors.get(i).getVector()[i];
                 // Make the main diagonal 1
-                vectors.get(i).scale(1/vectors.get(i).getVector()[i]);
+                vectors.get(i).setVector(Divide(vectors.get(i), i));
                 PrintMatrix(vectors, constants);
                 System.out.println("");
 
@@ -192,7 +231,7 @@ class Vector {
                     if(constants.getVector()[i] != 0)
                     {
                         System.out.println();
-                        System.out.println("No solution");
+                        System.out.println("No solution!");
                         return null;
                     }
                 }
@@ -205,7 +244,15 @@ class Vector {
     public static int span(List<Vector> vectors, int dimension) {
         int span = 0;
         
+        System.out.println("before gj");
+        PrintMatrix(vectors, null);
+        System.out.println("");
+        
         Gauss_Jordan(vectors, dimension, null);
+        
+        System.out.println("before span check");
+        PrintMatrix(vectors, null);
+        System.out.println("");
         
         for(int i = 0; i < vectors.size(); i++) {
             for(int j = 0; j < vectors.get(i).getDimension(); j++) {
@@ -215,6 +262,10 @@ class Vector {
                 }
             }
         }
+        
+        System.out.println("after span check");
+        PrintMatrix(vectors, null);
+        System.out.println("");
         
         return span;
     }
@@ -227,14 +278,18 @@ public class ADVDISC {
      */
     public static void main(String[] args) {
         List<Vector> vectors = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 2, 3, 4}, 4));
-           add(new Vector(new double[] {2, 3, 4, 5}, 4));
-           add(new Vector(new double[] {2, 7, 8, 9}, 4));
-           add(new Vector(new double[] {1, 3, 5, 7}, 4));
+           add(new Vector(new double[] {2, 5, 1}, 3));
+           add(new Vector(new double[] {3, 3, 0}, 3));
+           add(new Vector(new double[] {5, 2, -1}, 3));
         }};
         
+        double x = 10.5;
+        double y = 4.5;
+        
+        System.out.println((1/4.5)*10);
+        
         //Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {1, 1, 1, 0}, 4));
-        System.out.println("span(matrix, 4) = " + Vector.span(vectors, vectors.size()));
+        System.out.println("span = " + Vector.span(vectors, vectors.size()));
     }
     
 }
