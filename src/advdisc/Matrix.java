@@ -69,9 +69,11 @@ public class Matrix {
         double[][] newMatrix = new double[rows][b.getColumns()];
         Vector currentAVector;
         
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < b.getColumns(); j++) {
-                newMatrix[i][j] = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < b.getColumns(); j++) {
+                for (int k = 0; k < columns; k++) {
+                    newMatrix[i][j] += vectors.get(k).getVector()[i] * b.getVectors().get(j).getVector()[k];
+                }
             }
         }
         
