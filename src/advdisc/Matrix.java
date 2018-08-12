@@ -63,11 +63,7 @@ public class Matrix {
         }
         
         // [a x b][c x d] will result to [a x d]
-        double temp;
-        int row = 0;
-        int column = 0;
         double[][] newMatrix = new double[rows][b.getColumns()];
-        Vector currentAVector;
         
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < b.getColumns(); j++) {
