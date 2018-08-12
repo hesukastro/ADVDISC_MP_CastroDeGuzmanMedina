@@ -75,18 +75,6 @@ public class Matrix {
             }
         }
         
-        for(int i = 0; i < b.getRows(); i++) {
-            column = 0;
-            currentAVector = vectors.get(i);
-            for(int j = 0; j < columns; j++) {
-                newMatrix[row][column] += currentAVector.getVector()[j] * b.getVectors().get(j).getVector()[i];
-                System.out.println(currentAVector.getVector()[j] + " * " + b.getVectors().get(j).getVector()[i]);
-                column++;
-            }
-            
-            row++;
-        }
-        
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < b.getColumns(); j++) {
                 System.out.print(newMatrix[i][j] + " ");
