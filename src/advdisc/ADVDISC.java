@@ -28,10 +28,21 @@ public class ADVDISC {
            add(new Vector(new double[] {0, 2}, 2));
         }};
         
+        List<Vector> vectors3 = new ArrayList<Vector>() {{
+           add(new Vector(new double[] {1, 9, 6, 7, 9}, 5));
+           add(new Vector(new double[] {2, 6, 9, 2, 2}, 5));
+           add(new Vector(new double[] {3, 8, 8, 2, 3}, 5));
+           add(new Vector(new double[] {5, 1, 3, 6, 4}, 5));
+           add(new Vector(new double[] {7, 3, 5, 7, 8}, 5));
+        }};
+        
         Matrix tempMatrix = new Matrix(vectors, vectors.get(0).getDimension());
         Matrix tempMatrix2 = new Matrix(vectors2, vectors.get(0).getDimension());
+        Matrix tempMatrix3 = new Matrix(vectors3, vectors3.get(0).getDimension());
         
-        tempMatrix.times(tempMatrix2);
+//        tempMatrix.times(tempMatrix2);
+
+        System.out.println(tempMatrix3.det());
         
         /*
             this creates a matrix
