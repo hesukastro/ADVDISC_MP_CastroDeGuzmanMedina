@@ -19,44 +19,21 @@ public class ADVDISC {
      */
     public static void main(String[] args) {        
         List<Vector> vectors = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 3}, 2));
-           add(new Vector(new double[] {2, 4}, 2));
-        }};
+            add(new Vector(new double[] {2, 1, 5}, 3));
+            add(new Vector(new double[] {1, 3, 6}, 3));
+            add(new Vector(new double[] {3, 2, 7}, 3));
+        }};        
         
         List<Vector> vectors2 = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {2, 1}, 2));
-           add(new Vector(new double[] {0, 2}, 2));
+            add(new Vector(new double[] {1, 1, 0}, 3));
+            add(new Vector(new double[] {1, 0, 1}, 3));
+            add(new Vector(new double[] {1, 1, 1}, 3));
         }};
         
-        List<Vector> vectors3 = new ArrayList<Vector>() {{
-           add(new Vector(new double[] {1, 9, 6, 7, 9}, 5));
-           add(new Vector(new double[] {2, 6, 9, 2, 2}, 5));
-           add(new Vector(new double[] {3, 8, 8, 2, 3}, 5));
-           add(new Vector(new double[] {5, 1, 3, 6, 4}, 5));
-           add(new Vector(new double[] {7, 3, 5, 7, 8}, 5));
-        }};
+        Matrix tempMatrix = new Matrix(vectors2, vectors.get(0).getDimension());
+        Matrix tempMatrix2 = tempMatrix.inverse();
         
-        Matrix tempMatrix = new Matrix(vectors, vectors.get(0).getDimension());
-        Matrix tempMatrix2 = new Matrix(vectors2, vectors.get(0).getDimension());
-        Matrix tempMatrix3 = new Matrix(vectors3, vectors3.get(0).getDimension());
-        
-//        tempMatrix.times(tempMatrix2);
-
-        System.out.println(tempMatrix3.det());
-        
-        /*
-            this creates a matrix
-            | 1 0 0 0 |
-            | 0 0 1 0 |
-            | 0 0 0 0 |
-            | 0 0 0 1 |
-            basically, nagtranspose siya. take note.
-        */
-        
-//        Vector constant = Vector.Gauss_Jordan(vectors, 4, new Vector(new double[] {2, 0, 0, 2}, 4));
-//        if (constant != null)
-//            constant.PrintVector();
-//        System.out.println("span = " + Vector.span(vectors, 3));
+        tempMatrix.times(tempMatrix2);
     }
     
 }
